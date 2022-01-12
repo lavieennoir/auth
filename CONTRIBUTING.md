@@ -90,7 +90,7 @@ When you're sending a pull request:
 - For pull requests that change the API or implementation, discuss with maintainers first by opening an issue.
 
 ### Releasing
-Releasing a new version is mostly automated. For now the [CHANGELOG](https://gitlab.com/devima.solutions/auth/auth/-/blob/main/CHANGELOG.md) requires being updated manually. Once this has been done run the commands below. Versions should follow semantic versioning.
+Releasing a new version is mostly automated. For now the [CHANGELOG](https://github.com/lavieennoir/auth/blob/main/CHANGELOG.md) requires being updated manually. Once this has been done run the commands below. Versions should follow semantic versioning.
 
 ```sh
 npm publish
