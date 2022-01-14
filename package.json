@@ -3,6 +3,9 @@
   "version": "0.3.0",
   "description": "Auth boilerplate for frontend JS projects",
   "main": "lib/index",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "jest",
     "dev": "cd example && yarn dev",
@@ -12,7 +15,7 @@
     "prepush": "tsc --noEmit && jest",
     "build": "tsc -p tsconfig-build.json",
     "prepare": "yarn build",
-    "publish": "npm publish --access public"
+    "publish": "npm publish --access=public"
   },
   "repository": {
     "type": "git",
