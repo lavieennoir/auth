@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:lavieennoir/auth.git"
+    "url": "https://github.com/lavieennoir/auth.git"
   },
   "keywords": [
     "auth",
