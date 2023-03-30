@@ -12,8 +12,12 @@
 
 - Exclude untranspiled source code from package to reduce package size
 
-### 1.0.0 (Feb 8, 2022)
+### 1.0.0 (Mar 30, 2023)
 
-- Documentation updated
 - Added auth.singleton object to reduce boilerplate code in projects
 - Added react components to reduce boilerplate in react apps
+- Added `axios@1.x.x` support
+
+### 1.0.1 (Mar 31, 2023)
+
+- Documentation updated

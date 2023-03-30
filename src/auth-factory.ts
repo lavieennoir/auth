@@ -50,6 +50,8 @@ export default class AuthFactory<IUser, ISignInParams> {
   hasGlobalAuthOptions = () => !!this._options;
 
   /**
+   * @description After this check you can be sure that
+   * calling `tryGetAuthManager` will not throw an error
    * @returns `true` when AuthManager singleton is initialized.
    * `false` otherwise.
    */
@@ -69,9 +71,14 @@ export default class AuthFactory<IUser, ISignInParams> {
   };
 
   /**
-   * Return singleton instance of AuthManager if exist.
+   * @description Return singleton instance of AuthManager if exist.
    * Otherwise it will try to create new instance using global options.
-   * Global options must be set before calling this method using setGlobalAuthOptions()
+   * Global options must be set before calling this method using `setGlobalAuthOptions`
+   * @throws `new Error('getAuthManager() method of Auth cannot be called before setAuthOptions(). Options are required to create auth manager.');`
+   *
+   * Error is thrown if auth options are not set.
+   * You should set them calling `setGlobalAuthOptions`
+   * somewhere before in your application.
    * @returns instance of AuthManager
    */
   getAuthManager = async () => {
@@ -85,9 +92,13 @@ export default class AuthFactory<IUser, ISignInParams> {
       );
     }
 
-    const { refreshTokenOnInit, ...options } = this._options;
+    const { refreshTokenOnInit, initialState, ...options } = this._options;
 
-    this._instance = AuthFactory.createAuthManagerInstance(options);
+    if (initialState) {
+      this._instance = AuthFactory.createAuthManagerInstance(options, initialState);
+    } else {
+      this._instance = AuthFactory.createAuthManagerInstance(options);
+    }
 
     if (refreshTokenOnInit) {
       // If there is a refresh token, the user might be authorized.
@@ -103,6 +114,9 @@ export default class AuthFactory<IUser, ISignInParams> {
    * Remove response interceptor that refreshes token from axios instance.
    * AuthManager instance should not be used after disposing!
    * The next call to getAuthManager will try to create a new instance.
+   *
+   * Call of this function **does not** reset auth options
+   * set via `setGlobalAuthOptions`! You need to update them manually.
    */
   disposeAuthManager = () => {
     if (this._instance) {

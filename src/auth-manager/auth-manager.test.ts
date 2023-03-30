@@ -6,20 +6,21 @@ import { MemoryStorage } from '../storage';
 import AuthManager from './auth-manager';
 
 import type { IAuthOptions, ISignedInOptions } from '../types';
+import type { AxiosRequestConfig } from 'axios';
 
 const updatedAuthData = { accessToken: 'valid-token', refreshToken: 'valid-refresh-token' };
 const getAxiosMock = () => {
   const instance = axios.create();
   const mock = new MockAdapter(instance, { delayResponse: 10 });
 
-  mock.onPost('/sign-in').reply((config) => {
+  mock.onPost('/sign-in').reply((config: AxiosRequestConfig) => {
     const { email } = JSON.parse(config.data);
 
     return email === 'error@example.com'
       ? [400, { message: 'email not found' }]
       : [200, { ...updatedAuthData }];
   });
-  mock.onPost('/refresh').reply((config) => {
+  mock.onPost('/refresh').reply((config: AxiosRequestConfig) => {
     const { refreshToken } = JSON.parse(config.data);
 
     return [null, 'invalid-token'].includes(refreshToken)

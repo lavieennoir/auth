@@ -17,7 +17,8 @@ export interface IAuthProviderProps<
   IUser,
   ISignInParams,
   IStorageKeys extends IAuthStorageKeys = IDefaultAuthStorageKeys,
-> extends IAuthFactoryOptions {
+  IsSignedIn extends boolean = boolean,
+> extends IAuthFactoryOptions<IsSignedIn, IUser> {
   children: ReactNode;
   defaultValue?: IAuthContext<IUser>;
   config: IAuthOptions<IUser, ISignInParams, IStorageKeys>;
@@ -29,12 +30,12 @@ function AuthProvider<
   IStorageKeys extends IAuthStorageKeys = IDefaultAuthStorageKeys,
 >({
   children,
-  defaultValue,
   config,
   refreshTokenOnInit = true,
+  initialState,
 }: IAuthProviderProps<IUser, ISignInParams, IStorageKeys>) {
   const [value, setValue] = useState<IAuthContext<IUser>>(
-    defaultValue ?? getDefaultAuthContextValue(),
+    initialState ? { ...initialState, isLoading: false } : getDefaultAuthContextValue(),
   );
   const authFactory = useRef(getAuthFactory<IUser, ISignInParams>());
 
@@ -43,6 +44,7 @@ function AuthProvider<
     authFactory.current.setGlobalAuthOptions({
       ...config,
       refreshTokenOnInit,
+      initialState,
     } as IGlobalAuthOptions<IUser, ISignInParams>);
 
     let shouldBeDisposed = false;
@@ -67,7 +69,7 @@ function AuthProvider<
     return () => {
       shouldBeDisposed = true;
     };
-  }, [config]);
+  }, [config, refreshTokenOnInit, initialState]);
 
   return <AuthContextProvider value={value}>{children}</AuthContextProvider>;
 }

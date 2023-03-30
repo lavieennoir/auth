@@ -6,7 +6,7 @@ import { authRetryAxiosRequestConfigFlag } from '../constants';
 import RefreshTokenHandler from './refresh-token-handler';
 
 import type { IRefreshTokenHandlerParams } from './types';
-import type { AxiosError } from 'axios';
+import type { AxiosError, AxiosRequestConfig } from 'axios';
 
 const getAxiosMockUnauthorized = () => {
   const instance = axios.create();
@@ -23,7 +23,7 @@ const getAxiosMockForbidden = () => {
 const getAxiosMockAuthRefreshConcurrent = () => {
   const instance = axios.create();
   const mock = new MockAdapter(instance, { delayResponse: 10 });
-  mock.onGet('/').reply((config) => {
+  mock.onGet('/').reply((config: AxiosRequestConfig) => {
     const isRetryRequest = config.internalData?.[authRetryAxiosRequestConfigFlag];
     return [isRetryRequest ? 200 : 401, {}];
   });

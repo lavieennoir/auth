@@ -14,6 +14,8 @@ export default class RefreshTokenHandler<IUser, ISignInParams> implements IRefre
 
   private _interceptorId: number | null = null;
 
+  public unauthorizedResponseStatusCode = 401;
+
   protected _bindExternalMethods() {
     this.updateAuthHeader = this.updateAuthHeader.bind(this);
     this.dispose = this.dispose.bind(this);
@@ -31,7 +33,10 @@ export default class RefreshTokenHandler<IUser, ISignInParams> implements IRefre
     return async (error: AxiosError) => {
       const isRetryRequest = error.config?.internalData?.[authRetryAxiosRequestConfigFlag];
       const shouldSignOut =
-        isRetryRequest || !error.response || error.response.status !== 401 || !params.isSignedIn();
+        isRetryRequest ||
+        !error.response ||
+        error.response.status !== this.unauthorizedResponseStatusCode ||
+        !params.isSignedIn();
 
       if (shouldSignOut) {
         return Promise.reject(error);
@@ -53,7 +58,7 @@ export default class RefreshTokenHandler<IUser, ISignInParams> implements IRefre
           return await Promise.reject(error);
         }
 
-        error.config = {
+        const updatedErrorConfig = {
           ...error.config,
           // Mark this request as a retry to not trigger interceptor on it's response
 
@@ -66,7 +71,7 @@ export default class RefreshTokenHandler<IUser, ISignInParams> implements IRefre
           },
         };
 
-        return await this._axios.request(error.config);
+        return await this._axios.request(updatedErrorConfig);
       } catch {
         // Refresh token failed return original response
         await params.signOut();
