@@ -79,7 +79,7 @@ Interfaces declared in above are used to type options object that will be used t
 ```typescript
 // utils/auth-options.ts
 
-import type { IAuthOptions } from '@devimasolutions/auth';
+import type { IAuthOptions } from '@lavieennoir/auth';
 import type { IUser, ISignInParams } from './auth-options.types.ts';
 
 // Define options that will be passed to AuthProvider
@@ -129,7 +129,7 @@ Since these are actual variables, not types, it's important to define them in a 
 ```typescript
 // utils/auth.ts
 
-import { useAuthContext, getAuthManager } from '@devimasolutions/auth';
+import { useAuthContext, getAuthManager } from '@lavieennoir/auth';
 import type { IUser, ISignInParams } from 'utils/auth-options.types.ts';
 
 // Use throughout your app instead of plain `useAuthContext` and `getAuthManager`
@@ -315,7 +315,7 @@ export default App;
 
 ```typescript
 // utils/auth.ts
-import { getAuthFactory, getAuthManager } from '@devimasolutions/auth';
+import { getAuthFactory, getAuthManager } from '@lavieennoir/auth';
 import { authOptions } from 'utils/auth-options.ts';
 import type { IUser, ISignInParams } from 'utils/auth-options.types.ts';
 
