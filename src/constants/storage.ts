@@ -1,5 +1,5 @@
 export const defaultAuthStorageKeys = {
-  accessToken: '@ds/auth/access',
-  refreshToken: '@ds/auth/refresh',
-  user: '@ds/auth/user',
+  accessToken: '@l/auth/access',
+  refreshToken: '@l/auth/refresh',
+  user: '@l/auth/user',
 } as const;

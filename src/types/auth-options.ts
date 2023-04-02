@@ -117,9 +117,9 @@ export interface IAuthOptions<
    * @default
    * ```
    * {
-   *   accessToken: '@ds/auth/access',
-   *   refreshToken: '@ds/auth/refresh',
-   *   user: '@ds/auth/user',
+   *   accessToken: '@l/auth/access',
+   *   refreshToken: '@l/auth/refresh',
+   *   user: '@l/auth/user',
    * }
    * ```
    * You can import `defaultAuthStorageKeys` object

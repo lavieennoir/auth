@@ -20,7 +20,6 @@ export interface IAuthProviderProps<
   IsSignedIn extends boolean = boolean,
 > extends IAuthFactoryOptions<IsSignedIn, IUser> {
   children: ReactNode;
-  defaultValue?: IAuthContext<IUser>;
   config: IAuthOptions<IUser, ISignInParams, IStorageKeys>;
 }
 

@@ -1,1 +1,1 @@
-export const authRetryAxiosRequestConfigFlag = '@ds/auth/isRetryRequest';
+export const authRetryAxiosRequestConfigFlag = '@l/auth/isRetryRequest';
