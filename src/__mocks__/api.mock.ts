@@ -1,6 +1,8 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
+import type { AxiosRequestConfig } from 'axios';
+
 const getTokenData = (token?: string) => {
   if (!token) {
     return {
@@ -34,7 +36,7 @@ export const getApiMock = () => {
   const instance = axios.create();
   const mock = new MockAdapter(instance, { delayResponse: 50 });
 
-  mock.onPost('/sign-in').reply((config) => {
+  mock.onPost('/sign-in').reply((config: AxiosRequestConfig) => {
     const { email } = JSON.parse(config.data);
 
     const user = users.find((u) => u.email === email);
@@ -45,7 +47,7 @@ export const getApiMock = () => {
 
     return [200, { accessToken: createToken(user.id), refreshToken: createToken(user.id, 1000) }];
   });
-  mock.onPost('/refresh').reply((config) => {
+  mock.onPost('/refresh').reply((config: AxiosRequestConfig) => {
     const { token } = JSON.parse(config.data);
     const { expiresAt, userId } = getTokenData(token);
     if (!userId || !expiresAt || expiresAt < new Date()) {
@@ -54,7 +56,7 @@ export const getApiMock = () => {
 
     return [200, { accessToken: createToken(userId), refreshToken: createToken(userId, 1000) }];
   });
-  mock.onGet('/user').reply((config) => {
+  mock.onGet('/user').reply((config: AxiosRequestConfig) => {
     const token = config.headers?.authorization;
     const { expiresAt, userId } = getTokenData(token?.toString());
 
@@ -64,7 +66,7 @@ export const getApiMock = () => {
 
     return [200, users.find((u) => u.id === userId)];
   });
-  mock.onGet('/food').reply((config) => {
+  mock.onGet('/food').reply((config: AxiosRequestConfig) => {
     const token = config.headers?.authorization;
     const { expiresAt, userId } = getTokenData(token?.toString());
 
@@ -74,7 +76,7 @@ export const getApiMock = () => {
 
     return [200, ['Pancakes', 'Donuts', 'Croissants']];
   });
-  mock.onGet('/cards').reply((config) => {
+  mock.onGet('/cards').reply((config: AxiosRequestConfig) => {
     const token = config.headers?.authorization;
     const { expiresAt, userId } = getTokenData(token?.toString());
 
