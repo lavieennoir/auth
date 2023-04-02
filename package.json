@@ -4,7 +4,8 @@
   "description": "Auth boilerplate for frontend JS projects",
   "main": "lib/index",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "scripts": {
     "test": "jest",
@@ -15,7 +16,8 @@
     "prepush": "tsc --noEmit && jest",
     "build": "tsc -p tsconfig-build.json",
     "prepare": "yarn build",
-    "publish": "npm publish --access=public"
+    "publish": "npm publish --access=public",
+    "release": "release-it"
   },
   "repository": {
     "type": "git",
@@ -67,6 +69,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
+    "release-it": "^15.10.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
   },
