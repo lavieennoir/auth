@@ -11,11 +11,10 @@
 - 😻 Provide user data through the Context in React apps.
 - 🪶 Super lightweight
 
-**Talk is cheap. Show me the code!**
+## Talk is cheap. Show me the code!
 
 - [Demo with ReactJS](https://codesandbox.io/s/lavieennoir-auth-reactjs-usage-demo-qxlcex)
 - [Demo with Typescript only](https://codesandbox.io/s/lavieennoir-auth-typescript-usage-demo-ntok9o)
-  TODO: add code to sandboxes
 
 ## Installation 🔄
 
@@ -32,7 +31,12 @@ yarn add @lavieennoir/auth
   - [Gate pattern](#gate-pattern)
   - [SSR support](#ssr-support)
   - [Default TypeScript use case (without React)](#default-typescript-use-case-without-react)
+  - [Update user data](#update-user-data)
 - [Advanced configuration](#advanced-configuration-🛠)
+  - [Custom storage](#storage-istorage)
+  - [Storage keys](#storagekeys-istoragekeys)
+  - [Custom authorization header](#buildauthorizationheadermanager-iauthmanageriuser-isigninparams-string--null)
+  - [How tokens are refreshed](#how-tokens-are-refreshed)
 - [Dependencies](#dependencies-🔗)
 - [Full API reference](#full-api-reference-📙)
 - [Known issues](#known-issues-🚧)
@@ -347,18 +351,83 @@ const response = await authManager.axios.put('/profile', {
 });
 ```
 
+### Update user data
+
+There is a common use case when you want to update profile information. In case user update data that is present in storage of this library (eg profile image, email, username) you will need to update storage with new values.
+
+In this case you will need to call [updateUser](#updateuseruser-partialiuser-this) method of AuthManager.
+
+So the function that will update profile data both on the frontend and backend can look like this:
+
+```typescript
+import { getAuthManager } from '@lavieennoir/auth';
+
+const updateUserProfile = async (body: IUpdateUserProfileRequest) => {
+  const auth = await getAuthManager();
+  const { data } = await auth.axios.patch('/profile', body);
+  // This is the place where local state is updated.
+  auth.updateUser(data);
+  return data;
+};
+```
+
 ## Advanced configuration 🛠
 
 There are a bunch of optional configuration options provided by `IAuthOptions` interface.
-TODO:
 
-- storage
-- storageKeys
-- buildAuthorizationHeader
+### `storage?: IStorage`
 
-  - how refreshTokenHandler work
-  - retry failed requests
-  - adding authorization token
+Class passed to this field should implement `IStorage` interface and it will be used to persist authentication data.
+
+You can use `LocalStorage` or `MemoryStorage` classes from this package or create own storage implementation.
+
+By default this package use `localStorage` to persist auth data.
+You can find a `LocalStorage` class in this package that implements the `IStorage` abstraction and it is used as a default value.
+
+### `storageKeys?: IStorageKeys`
+
+You can specify own keys that will be used to put data into the storage object.
+It might be helpful if default keys are already used i your application.
+
+Default keys are represented by the following object:
+
+```typescript
+{
+  accessToken: '@l/auth/access',
+  refreshToken: '@l/auth/refresh',
+  user: '@l/auth/user'
+}
+```
+
+You can import `defaultAuthStorageKeys` object
+from index file of this package to read this object.
+
+### `buildAuthorizationHeader?(manager: IAuthManager<IUser, ISignInParams>): string | null;`
+
+This function generate a value that will be added to the `Authorization` header when making API requests using `authManager.axios`.
+
+The function accepts current AuthManager as a parameter. It can be used to get some authorization data or perform API requests within this function. This method is called only once access token is changed.
+
+This option has a default implementation.
+It will take current auth token from auth manager
+and build Bearer authorization header.
+`null` will be returned if there is no authorization token:
+
+```typescript
+(manager: IAuthManager<IUser, ISignInParams>) => {
+  const token = manager.getAccessToken();
+  return token ? `Bearer ${token}` : null;
+};
+```
+
+### How tokens are refreshed
+
+There is a separate `RefreshTokenHandler` class that is responsible for updating authorization header and rotating access and refresh tokens.
+This class is designed for internal use and should not be instantiated manually.
+
+When AuthManager is initialized `RefreshTokenHandler` adds a response interceptor to provided `axios` instance. This interceptor checks if authorized request return status code 401. That means that access token expired and it should be refreshed.
+
+The `AuthManager.refreshToken` method is called to claim new access token. And after that the failed request is retried with a new access token. If the request fails again the current user is considered unauthorized. And `AuthManager.signOut` is called.
 
 ## Dependencies 🔗
 
@@ -503,9 +572,9 @@ It might be helpful if default keys are already used i your application.
 
 ```typescript
 {
-  accessToken: '@ds/auth/access',
-  refreshToken: '@ds/auth/refresh',
-  user: '@ds/auth/user',
+  accessToken: '@l/auth/access',
+  refreshToken: '@l/auth/refresh',
+  user: '@l/auth/user',
 }
 ```
 
@@ -535,40 +604,270 @@ or `null` if user is not signed in.
 Contain user's information determined by `IUser` interface
 or `null` if user is not signed in.
 
+### IAuthFactoryOptions
+
+These options are used to initialize AuthManager when calling `getAuthManager`.
+
+#### `refreshTokenOnInit?: boolean;`
+
+When set to true, forces `getAuthManager` function to refresh user token in case it create new auth manager.
+
+This may be useful to initialize authManager during SPA mount and make sure user have access to the page.
+
+#### `initialState?: ISignedInOptions;`
+
+You can pass initial state to the authManager so it can have initial signed-in or signed-out state without having a loading state.
+
+When passed, AuthManager will have this data accessible right after initialization
+
 ### IGlobalAuthOptions
 
-TODO
+This is just combination of [IAuthOptions](#iauthoptions) and [IAuthFactoryOptions](#iauthfactoryoptions).
 
 ### IStorage
 
-TODO
+Represent the abstraction for user data persistent storage.
+
+This interface can be implemented to store user auth data wherever you want instead of default `localStorage` implementation.
+
+#### `setItem<T>(key: string, data: T): void;`
+
+#### `getItem<T>(key: string): T;`
+
+#### `remove(key: string): void;`
+
+#### `multiSet<T extends {}>(data: T): void;`
+
+#### `multiRemove(keys: string[]): void;`
 
 ### IAuthManager
 
-TODO
+#### `axios: AxiosInstance;`
+
+Instance of axios you that contain interceptors to perform authorized requests.
+When using this axios instance, the Authorization header is automatically added to requests.
+
+#### `options: Readonly<Required<IAuthOptions<IUser, ISignInParams>>>;`
+
+Options you have passed during initialization of AuthManager.
+
+#### `getUser(): IUser | null;`
+
+Returns `IUser` model if the user is logged in or `null` otherwise.
+
+#### `getAccessToken(): string | null;`
+
+Returns `accessToken` if the user is logged in or `null` otherwise.
+
+#### `getRefreshToken(): string | null;`
+
+Returns `refreshToken` if the user is logged in or `null` otherwise.
+
+#### `getAuthorizationHeader(): string | null;`
+
+Returns formatted http header value generated by `options.buildAuthorizationHeader`.
+
+#### `getAuthData(): IAuthData<IUser>;`
+
+Returns combined data from `getUser`, `getAccessToken`, `getRefreshToken`, `isSignedIn` methods.
+
+#### `setAuth(user: IUser, authResult: IAuthResult): this;`
+
+This method will save the authentication token and the user information in the storage to emulate sign-in action.
+
+This method emits `AuthEventNames.onAuthStateChanged` & `AuthEventNames.onSignedIn` events.
+
+#### `updateUser(user: Partial<IUser>): this;`
+
+Updates the user data in the storage. This function **Do not** perform API request to update user on the Backend it just update user data in a storage locally.
+This method emits `AuthEventNames.onAuthStateChanged` event.
+
+It only updates the fields passed as parameter instead of rewriting entire `IUser` model so it can be partially updated.
+
+#### `isSignedIn(): boolean;`
+
+Returns `true` if the user is signed in.
+
+#### `signIn(signInParams: ISignInParams): Promise<this>;`
+
+This method will call the `signIn` method from `IAuthOptions` and then save the authentication token and get the user information. All received data is stored in the storage.
+
+The returned promise will be rejected if sign in attempt failed and resolve with AuthManager object if it was successful.
+
+This method emits `AuthEventNames.onAuthStateChanged`, `AuthEventNames.onSignedIn`, `AuthEventNames.onSignInFailed` events.
+
+#### `signOut(): Promise<this>;`
+
+This method will call the `signOut` method from `IAuthOptions` and then clear the authentication token and all user information.
+
+#### `refreshToken(token?: string): Promise<this>;`
+
+This allow you to manually refresh token in the storage. When `token` parameter is passed it will be used to perform refresh token API call. Otherwise the current refresh token (that is present in the storage) will be used.
+
+This method emits `AuthEventNames.onAuthStateChanged` & `AuthEventNames.onTokenRefreshed` events.
+
+#### `isDisposed(): boolean;`
+
+Returns true if dispose method was called on this instance.
+
+#### `dispose(): void;`
+
+Removes all active event listeners on this object.
+Remove response interceptor that refreshes token from axios instance.
+Instance can not be used after disposing!
+You this method to clean up resources or if you are going to reinitialize AuthManager.
+
+#### `onSignedIn(callback: AuthCallback<IUser, ISignInParams>): AuthCallbackUnsubscriber;`
+
+Callback is triggered when user sign-in attempt was successful.
+
+`AuthManager` object is passed as a callback parameter.
+
+#### `onSignInFailed<IData = unknown, IConfigData = unknown>(callback: AuthResponseCallback<IData, IConfigData>): AuthCallbackUnsubscriber;`
+
+Callback is triggered when user sign-in attempt was not successful.
+
+`AxiosResponse` object is passed as a callback parameter.
+
+#### `onSignedOut(callback: AuthCallback<IUser, ISignInParams>): AuthCallbackUnsubscriber;`
+
+Callback is triggered when `signOut` method was successfully executed.
+
+`AuthManager` object is passed as a callback parameter.
+
+#### `onTokenRefreshed(callback: AuthCallback<IUser, ISignInParams>): AuthCallbackUnsubscriber;`
+
+Callback is triggered when `refreshToken` method was successfully executed. Or when expired token was automatically refreshed by AuthManager.
+
+`AuthManager` object is passed as a callback parameter.
+
+#### `onStateChanged(callback: AuthCallback<IUser, ISignInParams>): AuthCallbackUnsubscriber;`
+
+Callback is triggered when:
+
+- user sign in was successful or unsuccessful;
+- when user signed out;
+- when token is refreshed;
+- when user data is updated.
+
+So it is basically called on any change in AuthManager state.
+
+`AuthManager` object is passed as a callback parameter.
 
 ### AuthFactory
 
-TODO
+#### `static createAuthManagerInstance<IUser, ISignInParams>(authOptions: IAuthOptions<IUser, ISignInParams>): IAuthManager<IUser, ISignInParams>;`
+
+Creates new instance of AuthManager with passed `IAuthOptions` object.
+
+#### `static createAuthManagerInstance<IUser, ISignInParams, IsSignedIn extends boolean>(authOptions: IAuthOptions<IUser, ISignInParams>,signedInOptions: ISignedInOptions<IsSignedIn, IUser>): IAuthManager<IUser, ISignInParams>;`
+
+Creates new instance of AuthManager with passed `IAuthOptions` object and hydrates it with predefined state to avoid async initialization.
+
+#### `setGlobalAuthOptions = (authOptions: IGlobalAuthOptions<IUser, ISignInParams> | null): void`
+
+Set options that will be used to create a singleton instance of AuthManager accessible using `getAuthManager` method.
+
+#### `hasGlobalAuthOptions(): boolean;`
+
+Returns `true` when global options are not equal to `null`. `false` otherwise.
+
+#### `isAuthManagerInitialized(): boolean;`
+
+After this check you can be sure that calling `tryGetAuthManager` will not throw an error. Returns `true` when AuthManager singleton is initialized.
+
+#### `tryGetAuthManager(): AuthManager;`
+
+Try to get singleton instance of AuthManager without waiting for initialization.
+If AuthManager is not yet initialized this method will thor an error with a message "AuthManager is not initialized!".
+Otherwise it returns instance of AuthManager.
+
+#### `getAuthManager(): Promise<AuthManager>`
+
+Return singleton instance of AuthManager if exist.
+Otherwise it will try to create new instance using global options.
+Global options must be set before calling this method using `setGlobalAuthOptions`.
+
+This method throws an Error with a message "getAuthManager() method of Auth cannot be called before setAuthOptions(). Options are required to create auth manager."
+if auth options are not set.
+
+#### `disposeAuthManager(): void;`
+
+Removes all active event listeners on AuthManager singleton object.
+Remove response interceptor that refreshes token from axios instance.
+AuthManager instance should not be used after disposing!
+The next call to getAuthManager will try to create a new instance.
+
+Call of this function **does not** reset auth options
+set via `setGlobalAuthOptions`! You need to update them manually.
 
 ### getAuthFactory
 
-TODO
+_This method is used for React + TypeScript projects only._
+
+Returns AuthFactory class instance typed
+with generic parameters applied to this function.
 
 ### getAuthManager
 
-TODO
+_This method is used for React + TypeScript projects only._
+
+Returns IAuthManager instance typed with generic parameters applied to this function.
+
+It will try to initialize an auth manager if it was not yet initialized
+
+This function is an alias for `getAuthFactory().getAuthManager()`
 
 ### useAuthContext
 
-TODO
+_This method is used for React projects only._
+
+This hook returns values stored in `AuthProvider`.
+
+#### `isLoading: boolean;`
+
+Returns `ture` if AuthManager is not yet initialized.
+Values of other properties is not guaranteed and should not be accessed while `isLoading` is `true`.
+
+#### `user: IUser | null;`
+
+Returns user data if `isSignedIn` is `true`. Returns `null` otherwise.
+
+#### `accessToken: string | null;`
+
+Returns current access token if `isSignedIn` is `true`. Returns `null` otherwise.
+
+#### `refreshToken: string | null;`
+
+Returns current refresh token if `isSignedIn` is `true`. Returns `null` otherwise.
+
+#### `isSignedIn: boolean;`
+
+Returns `true` user is signed in.
 
 ### AuthProvider
 
-TODO
+All the components that execute `useAuthContext` hook should be located below `AuthProvider` in the component tree.
 
-TODO: configure release-it to publish packages
-TODO: add docsify to generate documentation website
+Under the hood, React Context is used to implement this function. So you can refer to regular React context concepts when using `AuthProvider`.
+
+Props:
+
+#### `refreshTokenOnInit?: boolean;`
+
+See [IAuthFactoryOptions](#iauthfactoryoptions) for more details.
+
+#### `initialState?: ISignedInOptions;`
+
+See [IAuthFactoryOptions](#iauthfactoryoptions) for more details.
+
+#### `config: IAuthOptions<IUser, ISignInParams, IStorageKeys>;`
+
+Auth options used to initialize AuthManager. See [IAuthOption](#iauthoptions) for more details.
+
+#### `children: ReactNode;`
+
+Components to render inside `AuthProvider`.
 
 ## Known issues 🚧
 
