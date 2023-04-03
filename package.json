@@ -38,7 +38,7 @@
   "bugs": {
     "url": "https://github.com/lavieennoir/auth/issues"
   },
-  "homepage": "https://github.com/lavieennoir/auth#readme",
+  "homepage": "https://lavieennoir.github.io/auth",
   "dependencies": {},
   "peerDependencies": {
     "axios": ">= 0.17.0",

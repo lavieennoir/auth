@@ -2,6 +2,8 @@
 
 **JWT authentication is easy as never before** ☕
 
+Visit the [lavieennoir.github.io/auth](https://lavieennoir.github.io/auth) for tutorials and documentation!
+
 ## Features
 
 - 🔑 Handle user sign in process.
