@@ -76,7 +76,7 @@ The `package.json` file contains various scripts for common tasks:
 - `yarn prepush`: run `yarn typescript` and `yarn lint`
 - `yarn build`: create a production build from src
 - `yarn prepare`: runs `yarn build` automatically before package is packed or published
-- `yarn publish`: publish the package
+- `yarn release`: publish the package
 
 ### Sending a pull request
 
@@ -89,18 +89,25 @@ When you're sending a pull request:
 - Review the documentation to make sure it looks good.
 - For pull requests that change the API or implementation, discuss with maintainers first by opening an issue.
 
+### Updating documentation
+
+Documentation website is generated automatically using [Docsify](https://docsify.js.org/#/).
+It is build based on data from the `/docs` folder. The `docs/README.md` file is a symbolic link to `README.md` that is located in repository root so it automatically reflects all the changes.
+
+If you update any feature that is documented, you should also update relevant part of documentation.
+
 ### Releasing
+
 Releasing a new version is mostly automated. For now the [CHANGELOG](https://github.com/lavieennoir/auth/blob/main/CHANGELOG.md) requires being updated manually. Once this has been done run the commands below. Versions should follow semantic versioning.
 
 ```sh
-npm publish
+npm release
 ```
 
 ### Attribution
 
 This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.0,
 available at https://www.contributor-covenant.org/version/2/0/code_of_conduct.html.
-
 
 For answers to common questions about this code of conduct, see the FAQ at
 https://www.contributor-covenant.org/faq. Translations are available at https://www.contributor-covenant.org/translations.

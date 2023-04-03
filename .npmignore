@@ -11,6 +11,7 @@
 /dist
 /example
 /.vscode
+/docs
 
 # Tests
 *.test.ts

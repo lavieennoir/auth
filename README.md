@@ -27,7 +27,7 @@ yarn add @lavieennoir/auth
 ## Table of Contents
 
 - [Usage guides](#usage-guides-👀)
-  - [Default use case](#default-use-case)
+  - [Default use case](#default-reactjs-use-case)
   - [Gate pattern](#gate-pattern)
   - [SSR support](#ssr-support)
   - [Default TypeScript use case (without React)](#default-typescript-use-case-without-react)
@@ -160,7 +160,7 @@ You can use the `AuthManager` to perform some authorization-related actions or a
 
 ```typescript
 // SignInButton.tsx
-import axios from 'utils/auth';
+import axios from 'axios';
 import { getAuthManager } from 'utils/auth';
 
 const SignInButton = () => {
@@ -189,7 +189,7 @@ const SignInButton = () => {
 
 ```typescript
 // UpdatePasswordButton.tsx
-import axios from 'utils/auth';
+import axios from 'axios';
 import { getAuthManager } from 'utils/auth';
 
 const UpdatePasswordButton = () => {
@@ -949,8 +949,8 @@ This feature will allow you to override refresh token process and use any HTTP c
 
 ## Contributing
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+See the [contributing guide](https://github.com/lavieennoir/auth/blob/main/CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
 ## License
 
-[MIT License](https://htihub.com/lavieennoir/auth/blob/main/LICENSE.md)
+[MIT License](https://github.com/lavieennoir/auth/blob/main/LICENSE)
