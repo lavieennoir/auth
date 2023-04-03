@@ -80,7 +80,7 @@ Interfaces declared in above are used to type options object that will be used t
 // utils/auth-options.ts
 
 import type { IAuthOptions } from '@lavieennoir/auth';
-import type { IUser, ISignInParams } from './auth-options.types.ts';
+import type { IUser, ISignInParams } from './auth-options.types';
 
 // Define options that will be passed to AuthProvider
 export const authOptions: IAuthOptions<IUser, ISignInParams> = {
@@ -108,7 +108,7 @@ If `config` property of `AuthProvider` is changed it will reinitialize authoriza
 
 ```typescript
 // App.tsx
-import type { authOptions } from './auth-options.ts';
+import type { authOptions } from './auth-options';
 
 const App = () => {
   return (
@@ -130,7 +130,7 @@ Since these are actual variables, not types, it's important to define them in a 
 // utils/auth.ts
 
 import { useAuthContext, getAuthManager } from '@lavieennoir/auth';
-import type { IUser, ISignInParams } from 'utils/auth-options.types.ts';
+import type { IUser, ISignInParams } from 'utils/auth-options.types';
 
 // Use throughout your app instead of plain `useAuthContext` and `getAuthManager`
 export const useAppAuthContext = () => useAuthContext<IUser>();
@@ -143,7 +143,7 @@ After the application mount, auth library takes some time to initialize so you n
 
 ```typescript
 // User.tsx
-import { useAuthContext } from 'utils/auth.ts';
+import { useAuthContext } from 'utils/auth';
 
 const User = () => {
   const { isLoading, isSignedIn, user } = useAuthContext();
@@ -160,8 +160,8 @@ You can use the `AuthManager` to perform some authorization-related actions or a
 
 ```typescript
 // SignInButton.tsx
-import axios from 'utils/auth.ts';
-import { getAuthManager } from 'utils/auth.ts';
+import axios from 'utils/auth';
+import { getAuthManager } from 'utils/auth';
 
 const SignInButton = () => {
   const handleSignIn = async () => {
@@ -189,8 +189,8 @@ const SignInButton = () => {
 
 ```typescript
 // UpdatePasswordButton.tsx
-import axios from 'utils/auth.ts';
-import { getAuthManager } from 'utils/auth.ts';
+import axios from 'utils/auth';
+import { getAuthManager } from 'utils/auth';
 
 const UpdatePasswordButton = () => {
   const handleSignIn = async () => {
@@ -213,7 +213,7 @@ You can use the Gate pattern to ensure that the authentication context is loaded
 
 ```typescript
 // AuthGate.tsx
-import { useAuthContext } from 'utils/auth.ts';
+import { useAuthContext } from 'utils/auth';
 
 const AuthGate = ({ children }: ReactPropsWithChildren<{}>) => {
   const { isLoading, isSignedIn } = useAuthContext();
@@ -235,7 +235,7 @@ You might also want to customize your AuthGate to handle access for different us
 
 ```typescript
 // App.tsx
-import type { authOptions } from './auth-options.ts';
+import type { authOptions } from './auth-options';
 
 const App = () => {
   return (
@@ -252,7 +252,7 @@ The component rendered below AuthGate will only be shown when user is authorized
 
 ```typescript
 // Profile.tsx
-import { useAuthContext } from 'utils/auth.ts';
+import { useAuthContext } from 'utils/auth';
 
 const Profile = () => {
   const { user } = useAuthContext();
@@ -284,7 +284,7 @@ export const authOptions = {
 ```typescript
 // pages/_app.tsx
 import type { AppProps } from 'next/app';
-import type { authOptions } from './auth-options.ts';
+import type { authOptions } from './auth-options';
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -316,8 +316,8 @@ export default App;
 ```typescript
 // utils/auth.ts
 import { getAuthFactory, getAuthManager } from '@lavieennoir/auth';
-import { authOptions } from 'utils/auth-options.ts';
-import type { IUser, ISignInParams } from 'utils/auth-options.types.ts';
+import { authOptions } from 'utils/auth-options';
+import type { IUser, ISignInParams } from 'utils/auth-options.types';
 
 getAuthFactory().setGlobalAuthOptions({
   ...authOptions,

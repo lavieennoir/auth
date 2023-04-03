@@ -33,6 +33,7 @@ yarn-error.log*
 
 # configuration
 .eslintrc.js
+.eslintrc
 .eslintignore
 tsconfig.json
 tsconfig-build.json
@@ -41,7 +42,10 @@ tsconfig-build.json
 .prettierignore
 .gitlab-ci.yml
 .editorconfig
+.husky
+.release-it.json
 commitlint.config.js
 babel.config.js
 CHANGELOG.md
 CODE_OF_CONDUCT.md
+CONTRIBUTING.md

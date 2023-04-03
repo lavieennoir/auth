@@ -21,3 +21,9 @@
 ### 1.0.1 (Mar 31, 2023)
 
 - Documentation updated
+
+### 1.1.2 (Apr 2, 2023)
+
+- Fixed test cases
+- Example project moved to parcel
+- Documentation updated
