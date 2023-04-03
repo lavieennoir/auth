@@ -129,7 +129,7 @@ Since these are actual variables, not types, it's important to define them in a 
 ```typescript
 // utils/auth.ts
 
-import { useAuthContext, getAuthManager } from '@lavieennoir/auth';
+import { useAuthContext, getAuthManager } from '@lavieennoir/auth/react';
 import type { IUser, ISignInParams } from 'utils/auth-options.types';
 
 // Use throughout your app instead of plain `useAuthContext` and `getAuthManager`
@@ -315,7 +315,7 @@ export default App;
 
 ```typescript
 // utils/auth.ts
-import { getAuthFactory, getAuthManager } from '@lavieennoir/auth';
+import { getAuthFactory, getAuthManager } from '@lavieennoir/auth/react';
 import { authOptions } from 'utils/auth-options';
 import type { IUser, ISignInParams } from 'utils/auth-options.types';
 
@@ -360,7 +360,7 @@ In this case you will need to call [updateUser](#updateuseruser-partialiuser-thi
 So the function that will update profile data both on the frontend and backend can look like this:
 
 ```typescript
-import { getAuthManager } from '@lavieennoir/auth';
+import { getAuthManager } from 'utils/auth';
 
 const updateUserProfile = async (body: IUpdateUserProfileRequest) => {
   const auth = await getAuthManager();
