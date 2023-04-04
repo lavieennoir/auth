@@ -1,9 +1,8 @@
 name: "Codecov runner: main branch"
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [opened, edited, reopened]
 jobs:
   deploy:
     runs-on: ubuntu-latest
