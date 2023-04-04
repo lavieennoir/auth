@@ -2,8 +2,8 @@
 
 ![nvm version](https://badgen.net/npm/v/@lavieennoir/auth)
 ![minzipped size](https://badgen.net/bundlephobia/minzip/@lavieennoir/auth)
-![codecov](https://badgen.net/codecov/c/github/lavieennoir/auth)
-![vulnerabilities](https://badgen.net/snyk/lavieennoir/auth)
+[![codecov](https://codecov.io/gh/lavieennoir/auth/branch/main/graph/badge.svg?token=7K31OSD30Q)](https://codecov.io/gh/lavieennoir/auth)
+[![Known Vulnerabilities](https://snyk.io/test/github/lavieennoir/auth/badge.svg)](https://snyk.io/test/github/lavieennoir/auth)
 
 **JWT authentication is easy as never before** ☕
 
@@ -315,6 +315,8 @@ export default App;
 ```
 
 ### Default TypeScript use case (without React)
+
+_If you will only import code from `@lavieennoir/auth` path and not `@lavieennoir/auth/react` the bundle will not include any React related code and it will not require React as a peer dependency_
 
 1. Firstly, you need to complete Steps 1 and 2 from [Default ReactJS use case](#default-reactjs-use-case). To define interface you authorization manager will work with and options for authorization manager.
 
