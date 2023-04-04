@@ -20,7 +20,8 @@
     "prepush": "tsc --noEmit && jest",
     "build": "tsc -p tsconfig-build.json",
     "prepare": "yarn build",
-    "release": "release-it"
+    "release": "release-it",
+    "docsify:serve": "docsify serve docs"
   },
   "repository": {
     "type": "git",

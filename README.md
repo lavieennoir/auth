@@ -1,5 +1,10 @@
 # @lavieennoir/auth
 
+![nvm version](https://badgen.net/npm/v/@lavieennoir/auth)
+![minzipped size](https://badgen.net/bundlephobia/minzip/@lavieennoir/auth)
+![codecov](https://badgen.net/codecov/c/github/lavieennoir/auth)
+![vulnerabilities](https://badgen.net/snyk/lavieennoir/auth)
+
 **JWT authentication is easy as never before** ☕
 
 Visit the [lavieennoir.github.io/auth](https://lavieennoir.github.io/auth) for tutorials and documentation!
