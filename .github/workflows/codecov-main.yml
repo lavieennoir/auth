@@ -1,12 +1,26 @@
-name: "Codecov runner: main branch"
+name: "Codecov test runner: main branch"
 
-on:
+on: 
+  push:
+    branches: [ main ]
   pull_request:
-    types: [opened, edited, reopened]
+    branches: [ main ]
+
 jobs:
-  deploy:
+  update_coverage:
     runs-on: ubuntu-latest
-    environment: production
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x]
     steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install modules
+        run: yarn
+      - name: Run tests
+        run: yarn test -- --coverage
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
