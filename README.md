@@ -1,7 +1,7 @@
 # @lavieennoir/auth
 
-![nvm version](https://badgen.net/npm/v/@lavieennoir/auth)
-![minzipped size](https://badgen.net/bundlephobia/minzip/@lavieennoir/auth)
+[![nvm version](https://badgen.net/npm/v/@lavieennoir/auth)](https://www.npmjs.com/package/@lavieennoir/auth)
+[![minzipped size](https://badgen.net/bundlephobia/minzip/@lavieennoir/auth)](https://bundlephobia.com/package/@lavieennoir/auth)
 [![codecov](https://codecov.io/gh/lavieennoir/auth/branch/main/graph/badge.svg?token=7K31OSD30Q)](https://codecov.io/gh/lavieennoir/auth)
 [![Known Vulnerabilities](https://snyk.io/test/github/lavieennoir/auth/badge.svg)](https://snyk.io/test/github/lavieennoir/auth)
 
