@@ -1,6 +1,6 @@
 {
   "name": "@lavieennoir/auth",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Auth boilerplate for frontend JS projects",
   "main": "lib/index",
   "exports": {
