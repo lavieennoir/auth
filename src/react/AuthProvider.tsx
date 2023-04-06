@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { getAuthFactory } from './auth-factory';
+import { getAuthFactory } from '../auth-factory-instance';
+
 import { AuthContextProvider, getDefaultAuthContextValue } from './useAuthContext';
 
 import type {

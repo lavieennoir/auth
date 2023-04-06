@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
 import { authRetryAxiosRequestConfigFlag } from '../constants';
@@ -80,7 +80,7 @@ describe('RefreshTokenHandler', () => {
 
     new RefreshTokenHandler(options);
     await axiosInstance.get('/').catch((e) => {
-      const isErrorResponse = axios.isAxiosError(e);
+      const isErrorResponse = isAxiosError(e);
 
       expect(isErrorResponse).toBeTruthy();
       expect(options.forceRefreshToken).not.toBeCalled();
@@ -107,7 +107,7 @@ describe('RefreshTokenHandler', () => {
     new RefreshTokenHandler(options);
 
     await axiosInstance.get('/').catch((e) => {
-      const isErrorResponse = axios.isAxiosError(e);
+      const isErrorResponse = isAxiosError(e);
 
       expect(isErrorResponse).toBeTruthy();
       expect(options.forceRefreshToken).not.toBeCalled();

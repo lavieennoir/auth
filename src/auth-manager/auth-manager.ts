@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { isAxiosError } from 'axios';
 
 import { AuthEventNames } from '../constants';
 import Emitter from '../emitter';
@@ -305,7 +305,7 @@ export default class AuthManager<IUser, ISignInParams, IsSignedIn extends boolea
       this._setTokens(authResult.data.accessToken, authResult.data.refreshToken, this.getUser());
       this._updateAuthHeader();
     } catch (e) {
-      this._emitter.emit(AuthEventNames.onAuthFailed, axios.isAxiosError(e) ? e.response : e);
+      this._emitter.emit(AuthEventNames.onAuthFailed, isAxiosError(e) ? e.response : e);
       throw e;
     }
 
@@ -347,7 +347,7 @@ export default class AuthManager<IUser, ISignInParams, IsSignedIn extends boolea
 
       await this._forceRefreshToken();
     } catch (error) {
-      if (axios.isAxiosError(error) && isClientErrorStatusCode(error.response?.status)) {
+      if (isAxiosError(error) && isClientErrorStatusCode(error.response?.status)) {
         await this._forceSignOut();
       }
     }
