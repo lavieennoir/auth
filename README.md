@@ -136,7 +136,8 @@ Since these are actual variables, not types, it's important to define them in a 
 ```typescript
 // utils/auth.ts
 
-import { useAuthContext, getAuthManager } from '@lavieennoir/auth/react';
+import { getAuthManager } from '@lavieennoir/auth';
+import { useAuthContext } from '@lavieennoir/auth/react';
 import type { IUser, ISignInParams } from 'utils/auth-options.types';
 
 // Use throughout your app instead of plain `useAuthContext` and `getAuthManager`
@@ -144,16 +145,16 @@ export const useAppAuthContext = () => useAuthContext<IUser>();
 export const getAppAuthManager = () => getAuthManager<IUser, ISignInParams>();
 ```
 
-5. Use `useAuthContext` to access authorization data
+5. Use `useAppAuthContext` to access authorization data
 
 After the application mount, auth library takes some time to initialize so you need to handle that case in your component using `isLoading` field returned from the hook. Once `isLoading` is set to `true` you can access authorization data.
 
 ```typescript
 // User.tsx
-import { useAuthContext } from 'utils/auth';
+import { useAppAuthContext } from 'utils/auth';
 
 const User = () => {
-  const { isLoading, isSignedIn, user } = useAuthContext();
+  const { isLoading, isSignedIn, user } = useAppAuthContext();
 
   if (isLoading) return <Loader />;
 
@@ -161,19 +162,19 @@ const User = () => {
 };
 ```
 
-5. Use `getAuthManager` sign-in user
+5. Use `getAppAuthManager` sign-in user
 
 You can use the `AuthManager` to perform some authorization-related actions or access the authorization state outside of React components
 
 ```typescript
 // SignInButton.tsx
 import { isAxiosError } from 'axios';
-import { getAuthManager } from 'utils/auth';
+import { getAppAuthManager } from 'utils/auth';
 
 const SignInButton = () => {
   const handleSignIn = async () => {
     // Get AuthManager instance
-    const authManager = await getAuthManager();
+    const authManager = await getAppAuthManager();
 
     try {
       await authManager.signIn({ email: 'test@mail.com', password: 'p@$$w0rd' });
@@ -197,12 +198,12 @@ const SignInButton = () => {
 ```typescript
 // UpdatePasswordButton.tsx
 import axios from 'axios';
-import { getAuthManager } from 'utils/auth';
+import { getAppAuthManager } from 'utils/auth';
 
 const UpdatePasswordButton = () => {
   const handleSignIn = async () => {
     // Get AuthManager instance
-    const authManager = await getAuthManager();
+    const authManager = await getAppAuthManager();
     // The axios instance you are using here will
     // automatically add accessToken to the authorization header
     // for more information see
@@ -220,10 +221,10 @@ You can use the Gate pattern to ensure that the authentication context is loaded
 
 ```typescript
 // AuthGate.tsx
-import { useAuthContext } from 'utils/auth';
+import { useAppAuthContext } from 'utils/auth';
 
 const AuthGate = ({ children }: ReactPropsWithChildren<{}>) => {
-  const { isLoading, isSignedIn } = useAuthContext();
+  const { isLoading, isSignedIn } = useAppAuthContext();
 
   if (isLoading) return <Loader />;
 
@@ -242,6 +243,7 @@ You might also want to customize your AuthGate to handle access for different us
 
 ```typescript
 // App.tsx
+import { AuthProvider } from '@lavieennoir/auth/react';
 import type { authOptions } from './auth-options';
 
 const App = () => {
@@ -259,10 +261,10 @@ The component rendered below AuthGate will only be shown when user is authorized
 
 ```typescript
 // Profile.tsx
-import { useAuthContext } from 'utils/auth';
+import { useAppAuthContext } from 'utils/auth';
 
 const Profile = () => {
-  const { user } = useAuthContext();
+  const { user } = useAppAuthContext();
 
   return <p>Email: {user.email}</p>;
 };
@@ -290,6 +292,7 @@ export const authOptions = {
 
 ```typescript
 // pages/_app.tsx
+import auth from '@lavieennoir/auth';
 import type { AppProps } from 'next/app';
 import type { authOptions } from './auth-options';
 
@@ -306,7 +309,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 export const getInitialProps = async () => {
   // Imperatively create a new AuthManager instance on a backend
   // to get current authData
-  const authManager = AuthFactory.createAuthManagerInstance(authOptions);
+  const authManager = auth.createAuthManagerInstance(authOptions);
   // return auth data to the frontend
   return { initialAuth: authManager.getAuthData() };
 };
@@ -324,11 +327,11 @@ _If you will only import code from `@lavieennoir/auth` path and not `@lavieennoi
 
 ```typescript
 // utils/auth.ts
-import { getAuthFactory, getAuthManager } from '@lavieennoir/auth/react';
+import { getAuthFactory, getAuthManager } from '@lavieennoir/auth';
 import { authOptions } from 'utils/auth-options';
 import type { IUser, ISignInParams } from 'utils/auth-options.types';
 
-getAuthFactory().setGlobalAuthOptions({
+getAuthFactory<IUser, ISignInParams>().setGlobalAuthOptions({
   ...authOptions,
   // This option will force auth manager
   // to refresh token after initialization
@@ -343,9 +346,9 @@ export const getAppAuthManager = () => getAuthManager<IUser, ISignInParams>();
 
 ```typescript
 // app.ts
-import { getAuthManager } from 'utils/auth';
+import { getAppAuthManager } from 'utils/auth';
 
-const authManager = await getAuthManager();
+const authManager = await getAppAuthManager();
 
 await authManager.signIn({ email: 'user@example.com', password: 'secret' }).catch((e) => {
   // Handle API errors here
@@ -369,10 +372,10 @@ In this case you will need to call [updateUser](#updateuseruser-partialiuser-thi
 So the function that will update profile data both on the frontend and backend can look like this:
 
 ```typescript
-import { getAuthManager } from 'utils/auth';
+import { getAppAuthManager } from 'utils/auth';
 
 const updateUserProfile = async (body: IUpdateUserProfileRequest) => {
-  const auth = await getAuthManager();
+  const auth = await getAppAuthManager();
   const { data } = await auth.axios.patch('/profile', body);
   // This is the place where local state is updated.
   auth.updateUser(data);
