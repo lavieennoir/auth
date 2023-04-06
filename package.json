@@ -29,10 +29,12 @@
   },
   "keywords": [
     "auth",
+    "authentication",
     "jwt",
     "boilerplate",
     "typescript",
-    "react"
+    "react",
+    "front-end"
   ],
   "author": "lavieennoir <dmitriykhiznyak@gmail.com> (https://github.com/lavieennoir)",
   "license": "MIT",

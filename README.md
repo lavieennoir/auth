@@ -167,7 +167,7 @@ You can use the `AuthManager` to perform some authorization-related actions or a
 
 ```typescript
 // SignInButton.tsx
-import axios from 'axios';
+import { isAxiosError } from 'axios';
 import { getAuthManager } from 'utils/auth';
 
 const SignInButton = () => {
@@ -181,7 +181,7 @@ const SignInButton = () => {
       // The error you catch here will always be an AxiosError
       // if you don't throw custom errors in `authOptions.signIn` function.
       // So basically this check is needed only to narrow down the error type for TypeScript.
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         // API request failed. Display nice error message to the user
         console.error(error.response?.data?.message);
       }

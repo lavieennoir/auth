@@ -1,6 +1,6 @@
-import AuthFactory from '../auth-factory';
+import AuthFactory from './auth-factory';
 
-import type { IAuthManager } from '../types';
+import type { IAuthManager } from './types';
 
 // Such a structure with a getter is mostly needed to ensure TS types are properly casted
 // to AuthFactory in the user application

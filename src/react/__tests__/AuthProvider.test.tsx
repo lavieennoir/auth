@@ -2,9 +2,9 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import React, { useEffect, useState } from 'react';
 
 import { createToken, getAuthOptions } from '../../__mocks__';
+import { getAuthFactory, getAuthManager } from '../../auth-factory-instance';
 import { defaultAuthStorageKeys } from '../../constants';
 import { MemoryStorage } from '../../storage';
-import { getAuthFactory, getAuthManager } from '../auth-factory';
 import AuthProvider from '../AuthProvider';
 import { useAuthContext } from '../useAuthContext';
 

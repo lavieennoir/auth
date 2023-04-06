@@ -1,4 +1,5 @@
-import { getAuthFactory } from './auth-factory';
+import { getAuthFactory } from '../auth-factory-instance';
+
 import { useAuthContext } from './useAuthContext';
 
 /**
