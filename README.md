@@ -1,9 +1,9 @@
 # @lavieennoir/auth
 
-[![npm](https://badges.hiptest.com:/npm/v/@lavieennoir/auth?style=for-the-badge)](https://www.npmjs.com/package/@lavieennoir/auth)
+[![npm](https://badges.hiptest.com/npm/v/@lavieennoir/auth?style=for-the-badge)](https://www.npmjs.com/package/@lavieennoir/auth)
 [![npm bundle size](https://badges.hiptest.com/bundlephobia/minzip/@lavieennoir/auth?style=for-the-badge)](https://bundlephobia.com/package/@lavieennoir/auth)
-[![Codecov](https://badges.hiptest.com:/codecov/c/github/lavieennoir/auth?style=for-the-badge&token=7K31OSD30Q)](https://codecov.io/gh/lavieennoir/auth)
-[![Snyk Vulnerabilities for GitHub Repo](https://badges.hiptest.com:/snyk/vulnerabilities/github/lavieennoir/auth?style=for-the-badge)](https://snyk.io/test/github/lavieennoir/auth)
+[![Codecov](https://badges.hiptest.com/codecov/c/github/lavieennoir/auth?style=for-the-badge&token=7K31OSD30Q)](https://app.codecov.io/gh/lavieennoir/auth)
+[![Snyk Vulnerabilities for GitHub Repo](https://badges.hiptest.com/snyk/vulnerabilities/github/lavieennoir/auth?style=for-the-badge)](https://snyk.io/test/github/lavieennoir/auth)
 
 **JWT authentication is easy as never before** ☕
 
