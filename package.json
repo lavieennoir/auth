@@ -4,17 +4,6 @@
   "description": "Auth boilerplate for frontend JS projects",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./react": {
-      "types": "./lib/react/index.d.ts",
-      "default": "./lib/react/index.js"
-    },
-    "./package.json": "./package.json"
-  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
@@ -27,7 +16,7 @@
     "setup": "rimraf .husky/pre-commit .husky/pre-push .husky/commit-msg && husky add .husky/pre-commit \"npx lint-staged\" && husky add .husky/pre-push \"yarn prepush\" && husky add .husky/commit-msg \"npx --no -- commitlint --edit $1\" && husky install",
     "prepush": "tsc --noEmit && jest",
     "build": "tsc -p tsconfig.build.json",
-    "prepare": "yarn build",
+    "prepare": "rimraf lib && yarn build",
     "release": "release-it",
     "docsify:serve": "docsify serve docs"
   },
