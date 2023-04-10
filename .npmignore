@@ -41,7 +41,7 @@ tsconfig-build.json
 .gitignore
 .prettierrc
 .prettierignore
-.gitlab-ci.yml
+.github
 .editorconfig
 .husky
 .release-it.json
